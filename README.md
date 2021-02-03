@@ -1,2 +1,15 @@
-# Receipt-data-extraction
-ICDAR 2019 Robust Reading Challenge on Scanned Receipts OCR and Information Extraction :sleepy:
+# Receipt-data-extraction :raising_hand:
+
+## 1. Dataset and Annotations
+
+## 2. Requirements
+
+## 3. Tasks
+
+### 3.1 Scanned Receipt Text Localisation
+
+### 3.2 Scanned Receipt OCR
+
+### 3.3 Key Information Extraction from Scanned Receipts
+
+
