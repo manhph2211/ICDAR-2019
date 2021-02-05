@@ -1,6 +1,3 @@
-import cv2
-import numpy as np 
-import matplotlib.pyplot as plt 
 import glob
 import os
 import re
@@ -17,15 +14,15 @@ def getData(data_train_path='./data/task1_train'):
 	codeSet=set(new_data)
 
 	for code in codeSet:
-		data[os.path.join(data_train_path,code,'.jpg')]=os.path.join(data_train_path,code,'.txt')
+		data[os.path.join(data_train_path,code+'.jpg')]=os.path.join(data_train_path,code+'.txt')
 
 	return data
 
 
-def saveFile(data):
+def saveJsonFile(data):
 	with open('./data_task1_train.json','w') as f:
 		json.dump(data,f,indent=4)
 
 
-data=getData()
-saveFile(data)
+# data=getData()
+# saveJsonFile(data)
