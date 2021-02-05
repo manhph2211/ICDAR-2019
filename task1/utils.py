@@ -5,7 +5,7 @@ import json
 # image_path=glob.glob(os.path.join(data_train_path,'*.jpg'))
 # txt_path=glob.glob(os.path.join(data_train_path,'*.txt'))
 
-def getData(data_train_path='./data/task1_train'):
+def getData(data_train_path='../data/task1_train'):
 	new_data=[]
 	data={}
 	for file in os.listdir(data_train_path):
