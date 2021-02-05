@@ -23,7 +23,7 @@ def getData(data_train_path='./data/task1_train'):
 
 
 def saveFile(data):
-	with open('./data/task1_train/data_task1_train.json','w') as f:
+	with open('./data_task1_train.json','w') as f:
 		json.dump(data,f,indent=4)
 
 
