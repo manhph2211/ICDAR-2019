@@ -24,28 +24,19 @@ def readJsonFile(path):
 		return data
 
 #x1_1, y1_1,x2_1,y2_1,x3_1,y3_1,x4_1,y4_1
-def getRetangle(image,line):
-	bx=line.split(',')
-	x=int(bx[0])
-	y=int(bx[1])
-	a=int(bx[2])
-	b=int(bx[3])
 
-	cv2.rectangle(image, (x, y), (a, b), (0, 255,0), 2 )
-
-
-data=readJsonFile('./data_task1_train.json')
-
-k=list(data.keys())[0]
-v=list(data.values())[0]
+# data=readJsonFile('./data_task1_train.json')
 
 def showRetangle(k,v):
 	img=cv2.imread(k)
 	with open(v,'r') as f:
 		for line in f:
-			getRetangle(img,line)
-	plt.plot(img)
+			bx=line.split(',')
+			x=int(bx[0])
+			y=int(bx[1])
+			a=int(bx[4])
+			b=int(bx[5])
+			cv2.rectangle(img, (x, y), (a, b), (0, 255,0), 2 )
+	plt.imshow(img)
+	plt.show()
 
-	
-showRetangle(k,v)
-plt.show()
