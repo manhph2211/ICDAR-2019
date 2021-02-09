@@ -4,7 +4,10 @@ import json
 import cv2
 import matplotlib.pyplot as plt
 
+
+
 class makeDataset(Dataset):
+
     def __init__(self,data,labels):
         self.data=data
         self.labels=labels
@@ -27,7 +30,10 @@ def readJsonFile(path):
 
 # data=readJsonFile('./data_task1_train.json')
 
-def showRetangle(k,v):
+
+
+# test image 
+def showRetangleFromFile(k,v):
 	img=cv2.imread(k)
 	with open(v,'r') as f:
 		for line in f:
@@ -36,7 +42,16 @@ def showRetangle(k,v):
 			y=int(bx[1])
 			a=int(bx[4])
 			b=int(bx[5])
-			cv2.rectangle(img, (x, y), (a, b), (0, 255,0), 2 )
+			cv2.rectangle(img, (x, y), (a, b), (0, 255,0), 2)
 	plt.imshow(img)
 	plt.show()
+			
+
+def showRetangle(img,corList):  # corList [[x1_1, y1_1,x3_1,y3_1],...]
+	for obj in corList: 
+		cv2.rectangle(img, (obj[0], obj[1]), (obj[4], obj[5]), (0, 255,0), 2 )
+	plt.imshow(img)
+	plt.show()
+
+
 
