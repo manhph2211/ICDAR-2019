@@ -4,6 +4,8 @@ import re
 import json
 import cv2
 import matplotlib.pyplot as plt 
+ 
+
 
 # image_path=glob.glob(os.path.join(data_train_path,'*.jpg'))
 # txt_path=glob.glob(os.path.join(data_train_path,'*.txt'))
@@ -13,13 +15,16 @@ def getData(data_train_path='../data/task1_train'):
 	data={}
 	for file in os.listdir(data_train_path):
 		if re.match('^((?!\)).)*$',file):
-			new_data.append(file.strip('.txt|.jpg'))
+			new_data.append(re.sub('.txt|.jpg$','',file))
 	codeSet=set(new_data)
 
 	for code in codeSet:
 		data[os.path.join(data_train_path,code+'.jpg')]=os.path.join(data_train_path,code+'.txt')
 
 	return data
+
+
+
 
 
 def saveJsonFile(data):
