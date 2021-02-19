@@ -27,14 +27,12 @@ def save_jsonFile(data):
 	with open('./data_task1_train.json','w') as f:
 		json.dump(data,f,indent=4)
 
+def read_json_file(path='./data_task1_train.json'):
+	with open(path,'r') as f:
+		data=json.load(f)
+		return data
 
-# data=get_data()
-# save_jsonFile(data)
 
-
-# test image 
-# data=read_jsonFile('./data_task1_train.json')
-'''
 def show_retangle_from_file(k,v):
 	img=cv2.imread(k)
 	with open(v,'r') as f:
@@ -47,15 +45,19 @@ def show_retangle_from_file(k,v):
 			cv2.rectangle(img, (x_min, y_min), (x_max, y_max), (0, 255,0), 2)
 	plt.imshow(img)
 	plt.show()
-			
-'''
 
 
-def test(img,corList):  # corList [[x1_1, y1_1,x3_1,y3_1],...]
-	for obj in corList: 
-		cv2.rectangle(img, (obj[0], obj[1]), (obj[4], obj[5]), (0, 255,0), 2 )
-	plt.imshow(img)
-	plt.show()
+if __name__=="__main__":
+	#data=get_data()
+	#save_jsonFile(data)
+	data=read_json_file()
+	item=iter(data.items())
+	next_item=next(item)
+	show_retangle_from_file(next_item[0],next_item[1])
+
+
+
+
 
 
 
