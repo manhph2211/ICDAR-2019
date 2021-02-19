@@ -162,10 +162,10 @@ class SSD(nn.Module):
             conf.append(c(x).permute(0, 2, 3, 1).contiguous())
 
         loc = torch.cat([o.view(o.size(0), -1) for o in loc], 1) #(batch_size, 34928) 4*8732
-        conf = torch.cat([o.view(o.size(0), -1) for o in conf], 1) #(batch_size, 8732*21)
+        conf = torch.cat([o.view(o.size(0), -1) for o in conf], 1) #(batch_size, 8732*2)
 
         loc = loc.view(loc.size(0), -1, 4) #(batch_size, 8732, 4)
-        conf = conf.view(conf.size(0), -1, self.num_classes) #(batch_size, 8732, 21)
+        conf = conf.view(conf.size(0), -1, self.num_classes) #(batch_size, 8732, 2)
 
         output = (loc, conf, self.dbox_list)
 
