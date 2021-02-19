@@ -6,8 +6,6 @@ from sklearn.preprocessing import MinMaxScaler
 from utils import read_json_file
 from tqdm import tqdm
 
-
-
 class my_dataset(Dataset):
 
     def __init__(self,img_paths,targets_paths):
@@ -15,20 +13,22 @@ class my_dataset(Dataset):
         self.targets_paths=targets_paths
         self.transforms=transforms.Compose([transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-
     def __len__(self):
         return len(self.img_paths)
-
+    
+    def normalize(self,data):
+        mms=MinMaxScaler().fit(data)
+        return mms.transform(data)
+    
     def __getitem__(self,idx):
 
         img=cv2.imread(self.img_paths[idx]) # BGR
         #height,width,channels=img.shape
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
-        
+        img=cv2.resize(img,(300,300))
         img=torch.tensor(img, dtype=torch.float32)
         img=img.permute(2, 0, 1) # (height, width, channels) -> (channels, height, width)
         img=self.transforms(img)
-
 
         tar_path=self.targets_paths[idx]
         with open(tar_path,'r') as f:
@@ -43,13 +43,29 @@ class my_dataset(Dataset):
                 boxes.append([x_min,y_min,x_max,y_max])
                 labels.append([1])
             # minmax norm:v
-            mms = MinMaxScaler().fit(boxes)
-            boxes_norm=mms.transform(boxes)
-            boxes=torch.tensor(boxes_norm,dtype=torch.long)
-            labels=torch.tensor(labels,dtype=torch.long)
+            boxes_norm=self.normalize(boxes)
+            boxes=torch.FloatTensor(boxes_norm)
+            
+            labels=torch.FloatTensor(labels)
             tar=torch.hstack((boxes,labels))
             return img,tar
-    
+        
+        
+def my_collate_fn(batch):
+    targets = []
+    imgs = []
+
+    for sample in batch:
+        imgs.append(sample[0]) #sample[0]=img
+        targets.append(torch.FloatTensor(sample[1])) # sample[1]=annotation
+    #[3, 300, 300]
+    # (batch_size, 3, 300, 300)
+    imgs = torch.stack(imgs, dim=0)
+
+    return imgs, targets
+
+
+
 if __name__=="__main__":
     data=read_json_file()
     img_paths=list(data.keys())
@@ -60,10 +76,12 @@ if __name__=="__main__":
         batch_size=8,
         num_workers=8,
         shuffle=True,
+        collate_fn=my_collate_fn,
     )
 
-    for k,v in tqdm(my_loader,total=len(my_loader)):
-        print(v.shape)
+    for k,v in tqdm(my_loader):
+        print(k[0].shape)
+        print(v[0].shape)
 
 
 
