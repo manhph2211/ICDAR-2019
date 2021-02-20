@@ -15,15 +15,11 @@ class my_dataset(Dataset):
 
     def __len__(self):
         return len(self.img_paths)
-    
-    def normalize(self,data):
-        mms=MinMaxScaler().fit(data)
-        return mms.transform(data)
-    
+
     def __getitem__(self,idx):
 
         img=cv2.imread(self.img_paths[idx]) # BGR
-        #height,width,channels=img.shape
+        height,width,channels=img.shape
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
         img=cv2.resize(img,(300,300))
         img=torch.tensor(img, dtype=torch.float32)
@@ -40,11 +36,11 @@ class my_dataset(Dataset):
                 y_min=int(bx[1])
                 x_max=int(bx[4])
                 y_max=int(bx[5])
-                boxes.append([x_min,y_min,x_max,y_max])
+                boxes.append([x_min/width,y_min/height,x_max/width,y_max/height])
                 labels.append([1])
             # minmax norm:v
-            boxes_norm=self.normalize(boxes)
-            boxes=torch.FloatTensor(boxes_norm)
+            #boxes_norm=self.normalize(boxes)
+            boxes=torch.FloatTensor(boxes)
             
             labels=torch.FloatTensor(labels)
             tar=torch.hstack((boxes,labels))
