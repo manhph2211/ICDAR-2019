@@ -9,7 +9,7 @@ from utils import match
 
 
 class MultiBoxLoss(nn.Module):
-    def __init__(self, jaccard_threshold=0.5, neg_pos=3, device="cpu"):
+    def __init__(self, jaccard_threshold=0.5, neg_pos=3, device="cpu"):#  means negative_defautbox_num=neg_pos * positive_one
         super(MultiBoxLoss, self).__init__()
         self.jaccard_threshold = jaccard_threshold
         self.neg_pos = neg_pos
@@ -17,25 +17,22 @@ class MultiBoxLoss(nn.Module):
 
     def forward(self, predictions, targets):
         loc_data, conf_data, dbox_list = predictions
-
-        # (batch_num, num_dbox, num_classes)
+        # (batch_num, num_dbox, num_classes)  -- loc_data
         num_batch = loc_data.size(0)
         num_dbox = loc_data.size(1)  # 8732
         num_classes = conf_data.size(2)
-
+        # make 2 empty tensors :)
         conf_t_label = torch.LongTensor(num_batch, num_dbox).to(self.device)
-        loc_t = torch.Tensor(num_batch, num_dbox, 4).to(self.device)
-
+        loc_t = torch.Tensor(num_batch, num_dbox, 4).to(self.device)  # every dbox has 4 (x_min...,y_max)
         for idx in range(num_batch):
             truths = targets[idx][:, :-1].to(self.device)  # (xmin, ymin, xmax, ymax) BBox
             labels = targets[idx][:, -1].to(self.device)  # label
-
             dbox = dbox_list.to(self.device)
             variances = [0.1, 0.2]
-            match(self.jaccard_threshold, truths, dbox, variances, labels, loc_t, conf_t_label, idx)
+            match(self.jaccard_threshold, truths, dbox, variances, labels, loc_t, conf_t_label, idx) #--> conf_t_label
 
         # SmoothL1Loss
-        pos_mask = conf_t_label > 0
+        pos_mask = conf_t_label > 0 # positive
         # loc_data(num_batch, 8732, 4)
         pos_idx = pos_mask.unsqueeze(pos_mask.dim()).expand_as(loc_data)
 
@@ -60,13 +57,12 @@ class MultiBoxLoss(nn.Module):
         num_neg = torch.clamp(num_pos * self.neg_pos, max=num_dbox)
         neg_mask = idx_rank < (num_neg).expand_as(idx_rank)
 
-        # (num_batch, 8732) -> (num_batch, 8732, 21)
+        # (num_batch, 8732) -> (num_batch, 8732, 2)
         pos_idx_mask = pos_mask.unsqueeze(2).expand_as(conf_data)
         neg_idx_mask = neg_mask.unsqueeze(2).expand_as(conf_data)
         conf_t_pre = conf_data[(pos_idx_mask + neg_idx_mask).gt(0)].view(-1, num_classes)
         conf_t_label_ = conf_t_label[(pos_mask + neg_mask).gt(0)]
         loss_conf = F.cross_entropy(conf_t_pre, conf_t_label_, reduction="sum")
-
         # total loss = loss_loc + loss_conf
         N = num_pos.sum()
         loss_loc = loss_loc / N

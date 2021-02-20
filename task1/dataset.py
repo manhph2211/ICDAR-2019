@@ -37,12 +37,12 @@ class my_dataset(Dataset):
                 x_max=int(bx[4])
                 y_max=int(bx[5])
                 boxes.append([x_min/width,y_min/height,x_max/width,y_max/height])
-                labels.append([1])
+                labels.append([0])
             # minmax norm:v
             #boxes_norm=self.normalize(boxes)
             boxes=torch.FloatTensor(boxes)
             
-            labels=torch.FloatTensor(labels)
+            labels=torch.IntTensor(labels)
             tar=torch.hstack((boxes,labels))
             return img,tar
         
@@ -53,7 +53,7 @@ def my_collate_fn(batch):
 
     for sample in batch:
         imgs.append(sample[0]) #sample[0]=img
-        targets.append(torch.FloatTensor(sample[1])) # sample[1]=annotation
+        targets.append(sample[1]) # sample[1]=annotation
     #[3, 300, 300]
     # (batch_size, 3, 300, 300)
     imgs = torch.stack(imgs, dim=0)
