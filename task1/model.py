@@ -160,7 +160,7 @@ class SSD(nn.Module):
         loc = loc.view(loc.size(0), -1, 4) #(batch_size, 8732, 4)
         conf = conf.view(conf.size(0), -1, self.num_classes) #(batch_size, 8732, 2)
 
-        output = (loc, conf, self.dbox_list)
+        output = (loc, conf, self.dbox_list)  # prediction
 
         if self.phase == "inference":
             return self.detect(output[0], output[1], output[2])

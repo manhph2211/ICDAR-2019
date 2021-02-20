@@ -22,8 +22,7 @@ img_paths = list(data.keys())
 targets_paths = list(data.values())
 ## split
 X_train, X_val, y_train, y_val = model_selection.train_test_split(img_paths, targets_paths, test_size=0.2, random_state=1)
-classes = ["text"]
-#img_list, anno_list, phase, transform, anno_xml
+
 train_dataset = my_dataset(X_train, y_train)
 val_dataset = my_dataset(X_val,y_val)
 
@@ -36,7 +35,7 @@ dataloader_dict = {"train": train_dataloader, "val": val_dataloader}
 cfg = {
     "num_classes": 2,
     "input_size": 300, #SSD300
-    "bbox_aspect_num": [4, 6, 6, 6, 4, 4], # Tỷ lệ khung hình cho source1->source6`
+    "bbox_aspect_num": [4, 6, 6, 6, 4, 4], # Tỷ lệ khung hình cho source1->source6
     "feature_maps": [38, 19, 10, 5, 3, 1],
     "steps": [8, 16, 32, 64, 100, 300], # Size of default box
     "min_size": [30, 60, 111, 162, 213, 264], # Size of default box
@@ -45,6 +44,8 @@ cfg = {
 }
 
 net = SSD(phase="train", cfg=cfg)
+
+#pretrain
 vgg_weights = torch.load("./pretrained/vgg16_reducedfc.pth")
 net.vgg.load_state_dict(vgg_weights)
 
@@ -90,16 +91,17 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
                 else:
                     continue
             for images, targets in dataloader_dict[phase]:
-                # move to GPU
+                # move to GPU or not!
                 images = images.to(device)
                 targets = [ann.to(device) for ann in targets]
+
                 # init optimizer
                 optimizer.zero_grad()
                 # forward
                 with torch.set_grad_enabled(phase=="train"):
                     outputs = net(images)
                     loss_l, loss_c = criterion(outputs, targets)
-                    loss = loss_l + loss_c
+                    loss = loss_l + loss_c # alpha=1
 
                     if phase == "train":
                         loss.backward() # calculate gradient
