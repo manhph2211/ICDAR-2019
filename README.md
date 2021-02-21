@@ -1,6 +1,6 @@
 # Receipt-data-extraction :raising_hand:
 
-Final project for The Deep Learning Course :smliey:
+Final project for The Deep Learning Course :smiley:
 
 ## 1. Dataset and Annotations
 
