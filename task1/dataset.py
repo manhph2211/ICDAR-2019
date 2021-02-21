@@ -2,7 +2,6 @@ import torch
 from torch.utils.data import Dataset
 import cv2
 from torchvision import transforms
-from sklearn.preprocessing import MinMaxScaler
 from utils import read_json_file
 from tqdm import tqdm
 
