@@ -1,6 +1,12 @@
 # Receipt-data-extraction :raising_hand:
 
+<<<<<<< HEAD
 ## 0. Installation :smiley:
+=======
+Final project for The Deep Learning Course :smliey:
+
+## 1. Dataset and Annotations
+>>>>>>> just test image
 
 - `git clone https://github.com/manhph2211/Receipt-Data-Extraction.git`
 - `cd Receipt-Data-Extraction`
