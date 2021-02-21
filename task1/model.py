@@ -294,7 +294,9 @@ class Detect(Function):
                 output[i, cl, :count] = torch.cat((scores[ids[:count]].unsqueeze(1), boxes[ids[:count]]), 1)
 
         return output
-
+    
+    def __call__(self,o1,o2,o3):
+        return self.forward(o1,o2,o3)
 
 if __name__ == "__main__":
     # vgg = create_vgg()

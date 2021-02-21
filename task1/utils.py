@@ -193,12 +193,12 @@ def match(threshold, truths, priors, variances, labels, loc_t, conf_t, idx):
 
 
 if __name__=="__main__":
-	#data=get_data()
-	#save_jsonFile(data)
-	data=read_json_file()
-	item=iter(data.items())
-	next_item=next(item)
-	show_retangle_from_file(next_item[0],next_item[1])
+	data=get_data()
+	save_jsonFile(data)
+    #data=read_json_file()
+	#item=iter(data.items())
+	#next_item=next(item)
+	#show_retangle_from_file(next_item[0],next_item[1])
 
 
 
