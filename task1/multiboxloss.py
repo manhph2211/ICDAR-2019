@@ -38,10 +38,12 @@ class MultiBoxLoss(nn.Module):
 
         # positive dbox, loc_data
         loc_p = loc_data[pos_idx].view(-1, 4)
+        #print(loc_p.shape)
         loc_t = loc_t[pos_idx].view(-1, 4)
+        #print(loc_t.shape)
         loss_loc = F.smooth_l1_loss(loc_p, loc_t, reduction="sum")
 
-        # loss_conf
+        # loss_conf1
         # CrossEntropy
         batch_conf = conf_data.view(-1, num_classes)  # (num_batch*num_box, num_classes)
         loss_conf = F.cross_entropy(batch_conf, conf_t_label.view(-1), reduction="none")
