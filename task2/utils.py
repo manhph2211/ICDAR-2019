@@ -19,6 +19,8 @@ def get_text_img(img_path,txt_path):
 			y_min=int(bx[1])
 			x_max=int(bx[4])
 			y_max=int(bx[5])
+			print(x_min)
+			print(x_max)
 			crop_img = img[y_min:y_max, x_min:x_max,:]
 			text_img.append(crop_img)
 			tex=''.join(bx[8:])

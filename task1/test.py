@@ -22,7 +22,6 @@ def get_test_img_path(test_dir='../data/task12_test',idx=1):
 	test_paths=os.listdir(test_dir)
 	test_paths_=[os.path.join(test_dir,x) for x in test_paths]
 	img_file_path = test_paths_[idx]
-
 	return img_file_path
 
 
@@ -70,9 +69,8 @@ def show_predict(img_file_path):
 
 
 if __name__ == '__main__':
-	
 	net = SSD(phase="inference", cfg=cfg)
-	net_weights = torch.load("./ssd300_.pth", map_location={"cuda:0":"cpu"})
+	net_weights = torch.load("./weights/ssd300_.pth", map_location={"cuda:0":"cpu"})
 	net.load_state_dict(net_weights)
 	show_predict(net,get_test_img_path())
 		

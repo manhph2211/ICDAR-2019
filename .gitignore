@@ -1,3 +1,4 @@
+./task1/weights
 ./task1/ssd300_.pth
 ./task1/pretrained/
 data/

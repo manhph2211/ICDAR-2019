@@ -74,11 +74,10 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
     iteration = 1
     epoch_train_loss = 0.0
     epoch_val_loss = 0.0
+    best_val_loss=99999
     logs = []
     for epoch in range(num_epochs+1):
-        print("---"*20)
-        print("Epoch {}/{}".format(epoch+1, num_epochs))
-        print("---"*20)
+      
         for phase in ["train", "val"]:
             if phase == "train":
                 net.train()
@@ -109,7 +108,7 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
                         optimizer.step() # update parameters
 
                         if (iteration % 10) == 0:
-                            print("Iteration {} || Loss: {:.4f} || 10iter: {:.4f} sec".format(iteration, loss.item(), duration))
+                            print("Iteration {} || Loss: {:.4f}".format(iteration, loss.item() ))
                         epoch_train_loss += loss.item()
                         iteration += 1
                     else:
@@ -119,11 +118,14 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
         log_epoch = {"epoch": epoch+1, "train_loss": epoch_train_loss, "val_loss": epoch_val_loss}
         logs.append(log_epoch)
         df = pd.DataFrame(logs)
-        df.to_csv("./ssd_logs.csv")
+        df.to_csv("./weights/ssd_logs.csv")
+        torch.save(net.state_dict(), "./weights/ssd300" + ".pth")
+
+        if epoch_val_loss<best_val_loss:
+            best_val_loss=epoch_val_loss
+            torch.save(net.state_dict(), "./weights/ssd300_best_val" + ".pth")
         epoch_train_loss = 0.0
         epoch_val_loss = 0.0
-        if ((epoch+1) % 10 == 0):
-            torch.save(net.state_dict(), "./ssd300_" + str(epoch+1) + ".pth")
 
 num_epochs = 100
 train_model(net, dataloader_dict, criterion, optimizer, num_epochs=num_epochs)
