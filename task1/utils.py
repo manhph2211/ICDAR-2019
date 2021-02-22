@@ -26,10 +26,10 @@ def get_data(data_train_path='../data/task1_train'):
 
 
 def save_jsonFile(data):
-	with open('./data_task1_train.json','w') as f:
+	with open('../data/data_task1_train.json','w') as f:
 		json.dump(data,f,indent=4)
 
-def read_json_file(path='./data_task1_train.json'):
+def read_json_file(path='../data/data_task1_train.json'):
 	with open(path,'r') as f:
 		data=json.load(f)
 		return data
