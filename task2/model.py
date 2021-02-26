@@ -1,11 +1,9 @@
-import torch
-from torch import nn
 from torch.nn import functional as F
+import torch.nn as nn
 
-
-class CaptchaModel(nn.Module):
+class my_model(nn.Module):
     def __init__(self, num_chars):
-        super(CaptchaModel, self).__init__()
+        super(my_model, self).__init__()
         self.conv_1 = nn.Conv2d(3, 128, kernel_size=(3, 6), padding=(1, 1))
         self.pool_1 = nn.MaxPool2d(kernel_size=(2, 2))
         self.conv_2 = nn.Conv2d(128, 64, kernel_size=(3, 6), padding=(1, 1))
@@ -24,11 +22,10 @@ class CaptchaModel(nn.Module):
         x = self.pool_2(x) 
         x = x.permute(0, 3, 1, 2)
         x = x.view(bs, x.size(1), -1)
-        #print(x.shape)
         x = F.relu(self.linear_1(x))
         x = self.drop_1(x)
         x, _ = self.lstm(x)
         x = self.output(x)
-        x = x.permute(1, 0, 2)# 72x8x19
+        x = x.permute(1, 0, 2)
         
         return x
