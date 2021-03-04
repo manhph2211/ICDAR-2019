@@ -7,9 +7,11 @@ import json
 import cv2
 import matplotlib.pyplot as plt
 
+
 def save_json_file(data,path):
 	with open(path,'w') as f:
 		json.dump(data,f,indent=4)
+
 
 def get_text_img(img_path,txt_path):
 
@@ -58,7 +60,6 @@ def get_data():
 	return crop_list,text_list,charac_list
 
 
-
 def split_data(img_paths,targets):
 	X_train, X_test, y_train, y_test = model_selection.train_test_split(img_paths, targets, test_size=0.2, random_state=1)
 	X_train, X_val, y_train, y_val = model_selection.train_test_split(X_train, y_train, test_size=0.25, random_state=1) # 0.25 x 0.8 = 0.2
@@ -101,15 +102,26 @@ def get_paths(img_dir='../data/For_task_2/Crop_Img',txt_dir='../data/For_task_2/
   return dic
 
 
-
 def get_text(txt_path):
   with open(txt_path,'r') as f:
     tx=f.read()
     return tx.strip()
 
 
+def get_vocab(txt_paths):
+	vocab=[]
+	for path in txt_paths:
+		text=get_text(path)
+		for cha in text:
+			if cha not in vocab:
+				vocab.append(cha)
+
+	return "".join(vocab)
+
 
 
 if __name__ == '__main__':
+	data=read_json_file()
+	create_data_folder(data)
 	dic=get_paths()
 	save_json_file(dic,'../data/For_task_2/data.json')

@@ -3,16 +3,25 @@ from torch.nn import functional as F
 import torch.nn as nn
 
 
-def ctc_loss(x,targets): # x<->y_hat
-	bs=x.shape[1]
-	log_probs = F.log_softmax(x, 2) # 8x72x19
-	input_lengths = torch.full(
-	    size=(bs,), fill_value=log_probs.size(1), dtype=torch.int32
-	    )
-	target_lengths = torch.full(
-	    size=(bs,), fill_value=targets.size(1), dtype=torch.int32
-	    )
-	loss = nn.CTCLoss(blank=0)(
-	    log_probs, targets, input_lengths, target_lengths
-	    )
-	return loss
+
+def encode_batch(batch_text):
+  encode_batch=[]
+  len_batch=[]
+  for text in batch_text:
+    encode_batch.append(text)
+    len_batch.append(len(text))
+  return torch.cat(encode_batch),torch.IntTensor(len_batch)
+
+
+def ctc_loss(text_batch, text_batch_logits,device='cuda'):
+    
+    text_batch_logps = F.log_softmax(text_batch_logits, 2) 
+    text_batch_logps_lens = torch.full(size=(text_batch_logps.size(1),), 
+                                       fill_value=text_batch_logps.size(0), 
+                                       dtype=torch.int32).to(device) 
+   
+    text_batch,text_batch_targets_lens = encode_batch(text_batch)
+    criterion = nn.CTCLoss().to(device)
+    loss = criterion(text_batch_logps, text_batch, text_batch_logps_lens, text_batch_targets_lens)
+
+    return loss

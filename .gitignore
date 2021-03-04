@@ -1,7 +1,4 @@
-./task1/weights
-./task1/ssd300_.pth
-./task1/pretrained/
-data/
+
 mypython/
 # Byte-compiled / optimized / DLL files
 __pycache__/
