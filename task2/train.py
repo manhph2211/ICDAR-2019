@@ -6,12 +6,12 @@ from model import my_model,weights_init
 from engine import train_fn,eval_fn
 import cv2
 from sklearn import model_selection
+import pandas as pd
 
 
 vocab="- !#$%&'()*+,./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`lr{|}~\""
 num_cha=len(vocab)
-
-
+print(num_cha)
 data=read_json_file(path='../data/For_task_2/data.json')
 img_paths=list(data.keys())
 txt_paths=list(data.values())
@@ -37,8 +37,8 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print("Using ",device)
 model.to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=3e-4)
-MODEL_SAVE_PATH = './task2/weights/model.pth'
-
+MODEL_SAVE_PATH = './weights/my_model.pth'
+model.load_state_dict(torch.load(MODEL_SAVE_PATH))
 
 def train(model,MODEL_SAVE_PATH ,NUM_EPOCHS,optimizer):
 	best_val_loss=999
@@ -46,11 +46,12 @@ def train(model,MODEL_SAVE_PATH ,NUM_EPOCHS,optimizer):
 	log=[]
 	for epoch in range(1,NUM_EPOCHS+1):
 	    train_loss = train_fn(model, train_dataloader, optimizer,device)
-	    val_loss,best_val_loss = eval_fn(model, val_dataloader,device,best_val_loss,MODEL_SAVE_PATH)
+	    val_loss = eval_fn(model, val_dataloader,device)
+
 	    log_epoch = {"epoch": epoch, "train_loss": train_loss, "val_loss": val_loss}
 	    log.append(log_epoch)
 	    df = pd.DataFrame(log)
-	    df.to_csv("./task2/weights/logs.csv")   
+	    df.to_csv("./weights/logs2.csv")   
 	    if val_loss < best_val_loss:
 	        best_val_loss = val_loss
 	        torch.save(model.state_dict(),MODEL_SAVE_PATH)

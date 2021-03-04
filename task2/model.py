@@ -11,7 +11,7 @@ class my_model(nn.Module):
         self.linear_1 = nn.Linear(2048, 64)
         self.drop_1 = nn.Dropout(0.2)
         self.lstm = nn.GRU(64, 32, bidirectional=True, num_layers=2, dropout=0.25, batch_first=True)
-        self.output = nn.Linear(64, num_chars)
+        self.output = nn.Linear(64, num_chars+1)
 
 
     def forward(self, images):    

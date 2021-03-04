@@ -19,6 +19,20 @@ def encode(text,vocab):
   return encode_text
 
 
+def decode(y_hat,vocab):
+  y_hat=F.log_softmax(y_hat, 2) 
+  y_hat=y_hat.argmax(2).numpy()
+  y_hat=y_hat.T
+  result=[]
+  for sample in y_hat:
+    text=[]
+    for idx in sample:
+      text.append(idx)
+    result.append(text)
+
+  return result
+
+
 class my_dataset(Dataset):
   
   def __init__(self,img_paths,txt_paths,vocab):
@@ -53,3 +67,7 @@ def my_collate_fn(batch):
   imgs = torch.cat([t.unsqueeze(0) for t in images], 0) 
   return imgs, texts
 
+
+
+if __name__ == '__main__':
+  main()

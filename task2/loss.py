@@ -14,7 +14,6 @@ def encode_batch(batch_text):
 
 
 def ctc_loss(text_batch, text_batch_logits,device='cuda'):
-    
     text_batch_logps = F.log_softmax(text_batch_logits, 2) 
     text_batch_logps_lens = torch.full(size=(text_batch_logps.size(1),), 
                                        fill_value=text_batch_logps.size(0), 

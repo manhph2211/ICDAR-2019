@@ -19,10 +19,11 @@ def train_fn(model, data_loader, optimizer,device):
 
 def eval_fn(model, data_loader,device):
     model.eval()
+    model_save_path='./weights/model.pth'
     fin_loss = 0
     tk0 = tqdm(data_loader, total=len(data_loader))
     for X,y in tk0:  
         y_hat=model(X.to(device))
         loss=ctc_loss(y,y_hat,device)
         fin_loss += loss.item()
-    return fin_loss / len(data_loader),best_val
+    return fin_loss / len(data_loader)
