@@ -38,7 +38,7 @@ print("Using ",device)
 model.to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=3e-4)
 MODEL_SAVE_PATH = './weights/my_model.pth'
-model.load_state_dict(torch.load(MODEL_SAVE_PATH))
+# model.load_state_dict(torch.load(MODEL_SAVE_PATH))
 
 def train(model,MODEL_SAVE_PATH ,NUM_EPOCHS,optimizer):
 	best_val_loss=999

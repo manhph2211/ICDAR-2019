@@ -23,10 +23,8 @@ def remove_dup(list_idx):
   text=[0]
   list_idx=list_idx[0]
   for i in range(len(list_idx)-1):
-    
     if list_idx[i]== text[-1] :
         continue
-    
     text.append(list_idx[i])
   return text
 
@@ -48,7 +46,7 @@ class my_dataset(Dataset):
    
   def __getitem__(self,idx):
     img=cv2.imread(self.img_paths[idx])
-    img=cv2.resize(img,(100,32)) 
+    img=cv2.resize(img,(160,32)) 
     img=torch.tensor(img, dtype=torch.float32)
     img=img.permute(2, 0, 1)
     img=img/255
