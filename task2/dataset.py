@@ -11,27 +11,33 @@ def encode(text,vocab):
   for cha in text:
     if cha=="·":
       cha='.'
-    if cha not in vocab:
-      print(cha)
+    # if cha not in vocab:
+    #   print(cha)
     idx=vocab.index(cha)+1
     encode_text.append(idx)
 
   return encode_text
 
 
-def decode(y_hat,vocab):
-  y_hat=F.log_softmax(y_hat, 2) 
-  y_hat=y_hat.argmax(2).numpy()
-  y_hat=y_hat.T
-  result=[]
-  for sample in y_hat:
-    text=[]
-    for idx in sample:
-      text.append(idx)
-    result.append(text)
+def remove_dup(list_idx):
+  text=[0]
+  list_idx=list_idx[0]
+  for i in range(len(list_idx)-1):
+    
+    if list_idx[i]== text[-1] :
+        continue
+    
+    text.append(list_idx[i])
+  return text
 
-  return result
 
+def decode(list_idx,vocab):
+  text=remove_dup(list_idx)
+  text=[x for x in text if x !=0]
+  text=[vocab[idx-1] for idx in text]
+  return ''.join(text)
+
+  
 
 class my_dataset(Dataset):
   
@@ -66,8 +72,3 @@ def my_collate_fn(batch):
     texts.append(b[1])
   imgs = torch.cat([t.unsqueeze(0) for t in images], 0) 
   return imgs, texts
-
-
-
-if __name__ == '__main__':
-  main()
