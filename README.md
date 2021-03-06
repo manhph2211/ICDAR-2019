@@ -2,10 +2,11 @@
 
 ## 0. Installation :smiley:
 
-- `git clone https://github.com/manhph2211/Receipt-Data-Extraction.git`
-- `cd Receipt-Data-Extraction`
-- `pip3 install -r requirements.txt`
-
+```
+git clone https://github.com/manhph2211/Receipt-Data-Extraction.git
+cd Receipt-Data-Extraction
+pip3 install -r requirements.txt
+```
 ## 1. Dataset and Annotations 
 
 - Data & annotations can be found at [this](https://drive.google.com/drive/folders/1fkJ_1M5C4Xr0ppbDaHSABkKvg8zOD2XA?usp=sharing)
@@ -28,9 +29,11 @@ python3 train.py
 
 ### 2.2 Scanned Receipt OCR
 
-- In this task, I used CRNN+CTCLoss for getting text from image. Therefore, I had to cut the given image to images and each of them just contains a single line of text. Save data in folder `./data/For_task_2`, like [this](https://drive.google.com/drive/folders/1BIdbIMDfeL69QymbsPQsv-xsc-klKbSG?usp=sharing) .Anyway, all you need is just run `python3 utils.py` 
+- First, download [this](https://drive.google.com/drive/folders/1BIdbIMDfeL69QymbsPQsv-xsc-klKbSG?usp=sharing) and save them as `.data/For_task_2`. This is needed data for this task.
 
 - For trainning, make sure you are in `./task2`, just try `python3 train.py`
+
+- Predict: `python3 predict.py`
 
 ### 2.3 Key Information Extraction from Scanned Receipts
 
